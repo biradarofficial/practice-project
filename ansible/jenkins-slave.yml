@@ -17,7 +17,7 @@
     get_url:
     #change following url to latest
       url: https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
-    #change file destination as per requirement  
+    #change file destination as per requirement  and create a folder named below on slave
       dest: /home/ubuntu/hostfile
       
 
@@ -26,3 +26,24 @@
       src: /home/ubuntu/hostfile/apache-maven-3.9.5-bin.tar.gz
       dest: /home/ubuntu/hostfile
       remote_src: yes
+  
+  - name: install docker 
+    apt: 
+      name: docker.io 
+      state: present
+
+  - name: start docker services 
+    service: 
+      name: docker 
+      state: started 
+  
+  - name: give 777 permissions on /var/run/docker.sock
+    file: 
+      path: /var/run/docker.sock
+      state: file 
+      mode: 0777
+
+  - name: start docker on boot time 
+    service: 
+      name: docker 
+      enabled: yes 
