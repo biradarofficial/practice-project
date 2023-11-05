@@ -54,18 +54,6 @@ resource "aws_route_table_association" "dpp-rta-public-subnet-02" {
   subnet_id = aws_subnet.dpp-public-subnet-02.id 
   route_table_id = aws_route_table.dpp-public-rt.id   
 }
-resource "aws_instance" "demo-server" {
-    ami = "ami-053b0d53c279acc90"
-    instance_type = "t2.micro"
-    key_name = "shyam-practice"
-    //security_groups = [ "demo-sg" ]
-    vpc_security_group_ids = [aws_security_group.demo-sg.id]
-    subnet_id = aws_subnet.dpp-public-subnet-01.id 
-    for_each = toset(["jenkins-master", "build-slave", "ansible"])
-   tags = {
-     Name = "${each.key}"
-   } 
-}
 
 resource "aws_security_group" "demo-sg" {
   name        = "demo-sg"
@@ -101,5 +89,20 @@ resource "aws_security_group" "demo-sg" {
     Name = "ssh-prot"
 
   }
+
+resource "aws_instance" "demo-server" {
+    ami = "ami-053b0d53c279acc90"
+    instance_type = "t2.micro"
+    key_name = "shyam-practice"
+    //security_groups = [ "demo-sg" ]
+    vpc_security_group_ids = [aws_security_group.demo-sg.id]
+    subnet_id = aws_subnet.dpp-public-subnet-01.id 
+    for_each = toset(["jenkins-master", "build-slave", "ansible"])
+   tags = {
+     Name = "${each.key}"
+   } 
+}
+
+
 }
 
